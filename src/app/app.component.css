@@ -1,0 +1,65 @@
+.call-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  
+  h1 {
+    color: #1976d2;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  video {
+    width: 480px;
+    height: 360px;
+    background-color: #000;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .controls {
+    display: flex;
+    gap: 15px;
+  }
+  
+  button {
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Individual button styles */
+  .mic-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .mic-button:hover {
+    background-color: #388e3c;
+  }
+  
+  .end-call-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .end-call-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  .emoji-button {
+    background-color: #ff9800;
+    color: white;
+  }
+  
+  .emoji-button:hover {
+    background-color: #f57c00;
+  }
+  
