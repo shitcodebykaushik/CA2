@@ -1,22 +1,39 @@
-<div class="call-container">
-  <h1>Welcome to {{ title }}!</h1>
+<div class="container">
+  <!-- Login and Signup Forms -->
+  <div [hidden]="isLoggedIn">
+    <div class="login-signup-form">
+      <h1>Welcome to the Zoom Clone</h1>
+      <div class="form-container">
+        <div>
+          <label for="username">Username:</label>
+          <input type="text" id="username" placeholder="Enter Username">
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input type="password" id="password" placeholder="Enter Password">
+        </div>
+        <button (click)="login()">Login</button>
+        <button (click)="signup()">Signup</button>
+      </div>
+    </div>
+  </div>
 
-  <video #videoElement autoplay playsinline muted></video>
-
-  <div class="controls">
-    <!-- Mic Button -->
-    <button class="mic-button" (click)="toggleMic()">
-      {{ micOn ? '🎤 Mic On' : '🔇 Mic Off' }}
-    </button>
-
-    <!-- End Call Button -->
-    <button class="end-call-button" (click)="endCall()">
-      📞 End Call
-    </button>
-
-    <!-- Emoji Button -->
-    <button class="emoji-button" (click)="sendEmoji()">
-      😊 Emoji
-    </button>
+  <!-- Video Conference Section -->
+  <div [hidden]="!isLoggedIn">
+    <div class="call-container">
+      <h1>Welcome to FACE CAM!</h1>
+      <video #videoElement autoplay playsinline muted></video>
+      <div class="controls">
+        <button class="mic-button" (click)="toggleMic()">
+          {{ micOn ? '🎤 Mic On' : '🔇 Mic Off' }}
+        </button>
+        <button class="end-call-button" (click)="endCall()">
+          📞 End Call
+        </button>
+        <button class="emoji-button" (click)="sendEmoji()">
+          😊 Emoji
+        </button>
+      </div>
+    </div>
   </div>
 </div>

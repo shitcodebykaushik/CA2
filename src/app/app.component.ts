@@ -11,13 +11,29 @@ export class AppComponent implements AfterViewInit {
   stream: MediaStream | null = null;
   mediaRecorder!: MediaRecorder;
   recordedChunks: Blob[] = [];
+  isLoggedIn = false; // Track login status
 
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
 
   ngAfterViewInit(): void {
+    // Ensure camera only starts when the user is logged in
+    if (this.isLoggedIn) {
+      this.startCamera();
+    }
+  }
+
+  // Toggle between login/signup and video call
+  login() {
+    this.isLoggedIn = true;
     this.startCamera();
   }
 
+  signup() {
+    this.isLoggedIn = true;
+    this.startCamera();
+  }
+
+  // Start the camera and set the stream to the video element
   startCamera() {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then(stream => {
@@ -30,6 +46,7 @@ export class AppComponent implements AfterViewInit {
       });
   }
 
+  // Start recording the video stream
   startRecording(stream: MediaStream) {
     this.recordedChunks = [];
 
@@ -54,6 +71,7 @@ export class AppComponent implements AfterViewInit {
     this.mediaRecorder.start();
   }
 
+  // Toggle microphone on/off
   toggleMic() {
     if (!this.stream) return;
 
@@ -65,6 +83,7 @@ export class AppComponent implements AfterViewInit {
     alert(`Mic ${this.micOn ? 'unmuted 🎤' : 'muted 🔇'}`);
   }
 
+  // End the call and stop the video stream
   endCall() {
     if (this.stream) {
       this.stream.getTracks().forEach(track => track.stop());
@@ -77,6 +96,7 @@ export class AppComponent implements AfterViewInit {
     alert('Call ended and recording saved! 📞💾');
   }
 
+  // Send emoji to participants
   sendEmoji() {
     alert('😊 Emoji sent to all participants!');
   }
