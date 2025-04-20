@@ -100,4 +100,24 @@ export class AppComponent implements AfterViewInit {
   sendEmoji() {
     alert('😊 Emoji sent to all participants!');
   }
+
+  // Start screen sharing
+  startScreenShare() {
+    navigator.mediaDevices.getDisplayMedia({ video: true })
+      .then(stream => {
+        // Stop the previous video track and add the screen share video track
+        if (this.stream) {
+          this.stream.getVideoTracks()[0].stop(); // Stop previous camera stream
+        }
+        
+        const videoTrack = stream.getVideoTracks()[0];
+        this.stream = stream; // Update the stream with screen share stream
+        this.videoElement.nativeElement.srcObject = this.stream; // Show the screen share
+        alert('Screen sharing started!');
+      })
+      .catch(err => {
+        console.error('Error sharing screen:', err);
+        alert('Screen sharing failed. Please check permissions.');
+      });
+  }
 }
