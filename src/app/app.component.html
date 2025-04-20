@@ -22,7 +22,7 @@
 
   <!-- Video Call Section -->
   <div [hidden]="!isLoggedIn">
-    <div class="call-container">
+    <div class="call-container" id="call-container">
       <h1>Welcome to FACE CAM!</h1>
 
       <!-- Video Grid -->
@@ -59,6 +59,9 @@
         </button>
         <button class="switch-user-button" (click)="switchUser()">
           Switch User
+        </button>
+        <button class="toggle-size-button" (click)="toggleMaximize()">
+          🔲 Maximize / Minimize
         </button>
       </div>
     </div>
@@ -177,6 +180,7 @@
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
   }
 
   .video-grid {
@@ -261,6 +265,30 @@
     background-color: #00BCD4;
   }
 
+  .toggle-size-button {
+    background-color: #FFC107;
+  }
+
+  /* Maximize/Minimize */
+  .call-container.maximized {
+    width: 90vw;
+    height: 90vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+  }
+
+  .call-container.minimized {
+    width: 200px;
+    height: 150px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
   /* Mobile Responsiveness */
   @media (max-width: 768px) {
     .video-grid {
@@ -276,3 +304,52 @@
     }
   }
 </style>
+
+<script>
+  let isLoggedIn = false;
+  let micOn = true;
+
+  // Toggle mic
+  function toggleMic() {
+    micOn = !micOn;
+    // Handle the mic functionality here (e.g., mute/unmute)
+  }
+
+  // End the call
+  function endCall() {
+    // Handle the end call functionality here
+  }
+
+  // Send an emoji
+  function sendEmoji() {
+    // Handle the emoji sending functionality here
+  }
+
+  // Start screen sharing
+  function startScreenShare() {
+    // Handle the screen sharing functionality here
+  }
+
+  // Switch user (you can implement logic to switch users)
+  function switchUser() {
+    // Switch users (for example, toggle between different users)
+  }
+
+  // Toggle maximize and minimize screen size
+  function toggleSize() {
+    const container = document.getElementById('call-container');
+    container.classList.toggle('maximized');
+    container.classList.toggle('minimized');
+  }
+
+  // Login and Signup functions
+  function login() {
+    isLoggedIn = true;
+    // Handle login logic
+  }
+
+  function signup() {
+    isLoggedIn = true;
+    // Handle signup logic
+  }
+</script>

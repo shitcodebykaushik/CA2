@@ -14,7 +14,8 @@ export class AppComponent implements AfterViewInit {
   user2Stream: MediaStream | null = null;
   mediaRecorder!: MediaRecorder;
   recordedChunks: Blob[] = [];
-  currentUser = 1; // Track the current user for video call (1 or 2)
+  currentUser = 1;
+  isMaximized = false;
 
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('user1Video') user1Video!: ElementRef<HTMLVideoElement>;
@@ -98,7 +99,6 @@ export class AppComponent implements AfterViewInit {
         if (this.stream) {
           this.stream.getVideoTracks()[0].stop();
         }
-        const videoTrack = stream.getVideoTracks()[0];
         this.stream = stream;
         this.videoElement.nativeElement.srcObject = this.stream;
         alert('Screen sharing started!');
@@ -112,5 +112,9 @@ export class AppComponent implements AfterViewInit {
   switchUser() {
     this.currentUser = this.currentUser === 1 ? 2 : 1;
     this.startCamera();
+  }
+
+  toggleMaximize() {
+    this.isMaximized = !this.isMaximized;
   }
 }
