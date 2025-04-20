@@ -1,49 +1,49 @@
 <div class="container">
-  <!-- Login and Signup Forms -->
+  <!-- Login and Signup Section -->
   <div [hidden]="isLoggedIn">
     <div class="login-signup-form">
       <h1>Welcome to the Zoom Clone</h1>
       <div class="form-container">
-        <div>
+        <div class="input-field">
           <label for="username">Username:</label>
           <input type="text" id="username" placeholder="Enter Username">
         </div>
-        <div>
+        <div class="input-field">
           <label for="password">Password:</label>
           <input type="password" id="password" placeholder="Enter Password">
         </div>
-        <button (click)="login()">Login</button>
-        <button (click)="signup()">Signup</button>
+        <div class="form-buttons">
+          <button (click)="login()">Login</button>
+          <button (click)="signup()">Signup</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Video Conference Section -->
+  <!-- Video Call Section -->
   <div [hidden]="!isLoggedIn">
     <div class="call-container">
       <h1>Welcome to FACE CAM!</h1>
 
-      <!-- Dummy Video Grid for Participants -->
+      <!-- Video Grid -->
       <div class="video-grid">
-        <div class="video-item">
+        <div class="video-item shared-screen">
           <video #videoElement autoplay playsinline muted></video>
-          <div class="participant-name">You</div>
+          <div class="participant-name">Shared Screen</div>
         </div>
-        <div class="video-item">
-          <video autoplay playsinline muted></video>
-          <div class="participant-name">Participant 1</div>
+
+        <div class="video-item user-camera">
+          <video #user1Video autoplay playsinline muted></video>
+          <div class="participant-name">User 1</div>
         </div>
-        <div class="video-item">
-          <video autoplay playsinline muted></video>
-          <div class="participant-name">Participant 2</div>
-        </div>
-        <div class="video-item">
-          <video autoplay playsinline muted></video>
-          <div class="participant-name">Participant 3</div>
+
+        <div class="video-item user-camera">
+          <video #user2Video autoplay playsinline muted></video>
+          <div class="participant-name">User 2</div>
         </div>
       </div>
 
-      <!-- Controls Section -->
+      <!-- Controls -->
       <div class="controls">
         <button class="mic-button" (click)="toggleMic()">
           {{ micOn ? '🎤 Mic On' : '🔇 Mic Off' }}
@@ -54,120 +54,160 @@
         <button class="emoji-button" (click)="sendEmoji()">
           😊 Emoji
         </button>
-        <!-- Dummy Screen Share Button -->
         <button class="screen-share-button" (click)="startScreenShare()">
           🖥️ Share Screen
+        </button>
+        <button class="switch-user-button" (click)="switchUser()">
+          Switch User
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- CSS Styles for Video Grid -->
 <style>
-  /* General Container */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+  /* Global Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  /* Login and Signup Forms */
-  .login-signup-form {
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+  }
+
+  .container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-top: 50px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
   }
 
-  .login-signup-form h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+  h1 {
+    font-size: 2rem;
+    color: #4A90E2;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  /* Login Form */
+  .login-signup-form {
+    width: 100%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
   }
 
   .form-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 15px;
-    max-width: 400px;
-    width: 100%;
   }
 
-  .form-container input {
-    padding: 10px;
-    font-size: 1rem;
+  .input-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .input-field input {
+    padding: 12px;
     width: 100%;
-    border-radius: 5px;
     border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
   }
 
-  .form-container button {
-    padding: 10px 20px;
-    background-color: #007bff;
+  .input-field input:focus {
+    border-color: #4CAF50;
+    outline: none;
+  }
+
+  .form-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .form-buttons button {
+    padding: 12px 18px;
+    background-color: #4CAF50;
     color: white;
-    font-size: 1rem;
+    font-size: 14px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 
-  .form-container button:hover {
-    background-color: #0056b3;
+  .form-buttons button:hover {
+    background-color: #45a049;
   }
 
-  /* Video Conference Section */
+  .form-buttons button:active {
+    background-color: #388e3c;
+  }
+
+  /* Video Call Layout */
   .call-container {
-    text-align: center;
-    margin-top: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    max-width: 90%; /* Limit width */
-    margin: auto;
+    padding: 20px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 
-  .call-container h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-  }
-
-  /* Video Grid Styling */
   .video-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    justify-content: space-around;
     gap: 20px;
     margin-top: 30px;
     width: 100%;
-    max-width: 1000px; /* Limit the video grid size */
   }
 
   .video-item {
+    width: 30%;
     position: relative;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    background-color: #000;
+    border-radius: 8px;
     overflow: hidden;
-    height: 250px; /* Fixed height for the videos */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
 
   .video-item video {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures video maintains aspect ratio */
-    border-radius: 10px;
+    height: auto;
   }
 
   .participant-name {
     position: absolute;
-    bottom: 5px;
-    left: 5px;
-    color: white;
-    font-size: 16px;
+    bottom: 10px;
+    left: 10px;
     background-color: rgba(0, 0, 0, 0.5);
+    color: white;
     padding: 5px 10px;
+    font-size: 14px;
     border-radius: 5px;
   }
 
@@ -175,85 +215,64 @@
   .controls {
     display: flex;
     justify-content: space-around;
+    gap: 15px;
     margin-top: 30px;
-    gap: 20px;
     width: 100%;
-    max-width: 1000px; /* Align controls with video grid */
   }
 
   .controls button {
-    font-size: 1.2rem;
-    padding: 12px 25px;
-    background-color: #007bff;
+    padding: 12px 18px;
+    background-color: #4CAF50;
     color: white;
+    font-size: 14px;
     border: none;
-    border-radius: 50px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
   .controls button:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
   }
 
-  /* Button Sizes */
-  .controls button.mic-button {
-    background-color: #28a745;
+  .controls button:active {
+    background-color: #388e3c;
   }
 
-  .controls button.mic-button:hover {
-    background-color: #218838;
+  /* Control Button Specific Colors */
+  .mic-button {
+    background-color: #2196F3;
   }
 
-  .controls button.end-call-button {
-    background-color: #dc3545;
+  .end-call-button {
+    background-color: #F44336;
   }
 
-  .controls button.end-call-button:hover {
-    background-color: #c82333;
+  .emoji-button {
+    background-color: #FFEB3B;
+    color: #333;
   }
 
-  .controls button.emoji-button {
-    background-color: #ffc107;
+  .screen-share-button {
+    background-color: #9C27B0;
   }
 
-  .controls button.emoji-button:hover {
-    background-color: #e0a800;
+  .switch-user-button {
+    background-color: #00BCD4;
   }
 
-  .controls button.screen-share-button {
-    background-color: #17a2b8;
-  }
-
-  .controls button.screen-share-button:hover {
-    background-color: #138496;
-  }
-
-  /* Responsiveness */
+  /* Mobile Responsiveness */
   @media (max-width: 768px) {
     .video-grid {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .controls {
       flex-direction: column;
-      align-items: center;
-    }
-
-    .form-container {
-      width: 100%;
     }
 
     .video-item {
-      height: 200px; /* Adjust height for smaller screens */
+      width: 100%;
     }
-  }
 
-  @media (max-width: 480px) {
-    .controls button {
-      font-size: 1rem;
-      padding: 10px 20px;
+    .form-buttons {
+      flex-direction: column;
     }
   }
 </style>

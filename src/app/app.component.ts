@@ -8,21 +8,24 @@ import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 export class AppComponent implements AfterViewInit {
   title = 'Zoom Clone';
   micOn = true;
+  isLoggedIn = false;
   stream: MediaStream | null = null;
+  user1Stream: MediaStream | null = null;
+  user2Stream: MediaStream | null = null;
   mediaRecorder!: MediaRecorder;
   recordedChunks: Blob[] = [];
-  isLoggedIn = false; // Track login status
+  currentUser = 1; // Track the current user for video call (1 or 2)
 
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
+  @ViewChild('user1Video') user1Video!: ElementRef<HTMLVideoElement>;
+  @ViewChild('user2Video') user2Video!: ElementRef<HTMLVideoElement>;
 
   ngAfterViewInit(): void {
-    // Ensure camera only starts when the user is logged in
     if (this.isLoggedIn) {
       this.startCamera();
     }
   }
 
-  // Toggle between login/signup and video call
   login() {
     this.isLoggedIn = true;
     this.startCamera();
@@ -33,91 +36,81 @@ export class AppComponent implements AfterViewInit {
     this.startCamera();
   }
 
-  // Start the camera and set the stream to the video element
   startCamera() {
+    if (this.currentUser === 1) {
+      this.startUserCamera('user1');
+    } else if (this.currentUser === 2) {
+      this.startUserCamera('user2');
+    }
+  }
+
+  startUserCamera(user: string) {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true })
       .then(stream => {
-        this.stream = stream;
-        this.videoElement.nativeElement.srcObject = stream;
-        this.startRecording(stream);
+        if (user === 'user1') {
+          this.user1Stream = stream;
+          this.user1Video.nativeElement.srcObject = stream;
+        } else if (user === 'user2') {
+          this.user2Stream = stream;
+          this.user2Video.nativeElement.srcObject = stream;
+        }
       })
       .catch(err => {
         console.error('Error accessing webcam:', err);
       });
   }
 
-  // Start recording the video stream
-  startRecording(stream: MediaStream) {
-    this.recordedChunks = [];
-
-    this.mediaRecorder = new MediaRecorder(stream);
-
-    this.mediaRecorder.ondataavailable = (event) => {
-      if (event.data.size > 0) {
-        this.recordedChunks.push(event.data);
-      }
-    };
-
-    this.mediaRecorder.onstop = () => {
-      const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'zoom-clone-recording.webm';
-      a.click();
-      URL.revokeObjectURL(url);
-    };
-
-    this.mediaRecorder.start();
-  }
-
-  // Toggle microphone on/off
   toggleMic() {
-    if (!this.stream) return;
+    let streamToToggle = this.currentUser === 1 ? this.user1Stream : this.user2Stream;
+    if (!streamToToggle) return;
 
     this.micOn = !this.micOn;
-    this.stream.getAudioTracks().forEach(track => {
+    streamToToggle.getAudioTracks().forEach(track => {
       track.enabled = this.micOn;
     });
 
     alert(`Mic ${this.micOn ? 'unmuted 🎤' : 'muted 🔇'}`);
   }
 
-  // End the call and stop the video stream
   endCall() {
-    if (this.stream) {
-      this.stream.getTracks().forEach(track => track.stop());
+    if (this.user1Stream) {
+      this.user1Stream.getTracks().forEach(track => track.stop());
+    }
+
+    if (this.user2Stream) {
+      this.user2Stream.getTracks().forEach(track => track.stop());
     }
 
     if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-      this.mediaRecorder.stop(); // Triggers onstop and saves the file
+      this.mediaRecorder.stop();
     }
 
     alert('Call ended and recording saved! 📞💾');
   }
 
-  // Send emoji to participants
   sendEmoji() {
     alert('😊 Emoji sent to all participants!');
   }
 
-  // Start screen sharing
   startScreenShare() {
     navigator.mediaDevices.getDisplayMedia({ video: true })
       .then(stream => {
-        // Stop the previous video track and add the screen share video track
         if (this.stream) {
-          this.stream.getVideoTracks()[0].stop(); // Stop previous camera stream
+          this.stream.getVideoTracks()[0].stop();
         }
-        
         const videoTrack = stream.getVideoTracks()[0];
-        this.stream = stream; // Update the stream with screen share stream
-        this.videoElement.nativeElement.srcObject = this.stream; // Show the screen share
+        this.stream = stream;
+        this.videoElement.nativeElement.srcObject = this.stream;
         alert('Screen sharing started!');
       })
       .catch(err => {
         console.error('Error sharing screen:', err);
         alert('Screen sharing failed. Please check permissions.');
       });
+  }
+
+  switchUser() {
+    this.currentUser = this.currentUser === 1 ? 2 : 1;
+    this.startCamera();
   }
 }
